@@ -1,0 +1,53 @@
+! APMonitor Modeling Language
+! http://www.apmonitor.com
+! 
+! Model source:
+! R. Palma and T.F. Edgar, Toward Patient Specific Insulin Therapy: A Novel
+!    Insulin Bolus Calculator.  In Proceedings Texas Wisconsin California Control
+!    Consortium, Austin, TX, Feb. 7-8, 2011.
+!
+! Expanded Bergman Minimal model to include meals and insulin
+! Parameters for an insulin dependent type-I diabetic
+Model
+  Parameters
+    gb    = 291       ! Basal Blood Glucose (mg/dL)
+    
+    p1    = 3.17e-2   ! 1/min
+    p2    = 1.23e-2   ! 1/min
+    si    = 2.9e-2    ! 1/min * (mL/micro-U)
+    ke    = 9.0e-2    ! 1/min
+    kabs  = 1.2e-2    ! 1/min
+    kemp  = 1.8e-1    ! 1/min
+    f     = 8.00e-1   ! L
+    vi    = 12.0      ! L
+    vg    = 12.0      ! L
+
+    ! insulin infusion rate
+    u = 3             ! micro-U/min
+
+    ! meal disturbance
+    d = 1000
+  End Parameters
+
+  Variables
+    ! In non-diabetic patients, the body maintains the blood glucose level at a 
+    !   range between about 3.6 and 5.8 mmol/L (64.8 and 104.4 mg/dL). 
+    g                ! blood glucose (mg/dl)
+    x                ! remote insulin (micro-u/ml)
+    i                ! insulin (micro-u/ml)
+    q[1]
+    q[2]
+    g_gut            ! gut blood glucose (mg/dl)
+    g_target         ! drive g to target
+  End Variables
+
+  Equations
+    $g = -p1*(g-gb) - si*x*g + f*kabs/vg * g_gut + f/vg * d  ! glucose dynamics
+    $x =  p2*(i-x)                                           ! remote insulin compartment dynamics
+    $i = -ke*i + u                                           ! insulin dynamics
+    $q[1] = u - kemp * q[1]
+    $q[2] = -kemp*(q[2]-q[1])
+    $g_gut = kemp*q[2] - kabs*g_gut
+    g_target = g
+  End Equations
+End Model

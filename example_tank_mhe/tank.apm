@@ -1,0 +1,50 @@
+! Create Custom Plots
+File *.plt
+  New Trend
+    inlet_flow
+    outlet_flow
+  New Trend
+    percent_open
+    volume
+    vol_lin
+  New Trend
+    c1
+    c2
+End File
+
+Model
+  Parameters
+    ! linear model
+    gain = 38.5
+    tau  = 131
+
+    ! non-linear model
+    ! valve (c1) and outflow (c2) constants
+    c1 = 0.25           ! mL/sec
+    c2 = 0.14           ! mL^0.5/sec
+
+    ! empty tank volume
+    v0   = 268          ! mL
+
+    ! inlet valve opening
+    percent_open = 10   ! %
+  End Parameters
+
+  Variables
+    inlet_flow          ! mL/sec
+    outlet_flow         ! mL/sec
+    volume  = v0+1      ! mL
+    vol_lin = v0+1      ! mL
+  End Variables
+
+  Equations
+    inlet_flow   = c1 * percent_open
+    outlet_flow  = c2 * SQRT(volume)
+
+    ! non-linear model
+    $volume      = inlet_flow - outlet_flow
+
+    ! linear model
+    tau * $vol_lin = - (vol_lin - v0) + gain * percent_open
+  End Equations
+End Model

@@ -1,0 +1,17 @@
+Model                
+  Parameters         
+   tau = 5         
+   K = 3  
+   u 
+  End Parameters     
+
+  Variables          
+   x = 0               
+   y = 0                
+  End Variables      
+
+  Equations          
+   tau * $x + x = K * u  
+   y = 2 * x         
+  End Equations      
+End Model            

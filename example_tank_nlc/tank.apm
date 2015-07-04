@@ -1,0 +1,77 @@
+! Create Custom Plots
+File *.plt
+  New Trend
+    percent_open[1]
+    percent_open[2]
+  New Trend
+    volume[1]
+    volume[2]
+  New Trend
+    sp
+    pv[1]
+    op[1]
+    pv[2]
+    op[2]
+  New Trend
+    proportional
+    integral
+    derivative
+    op[2]
+End File
+
+Model
+  Parameters
+    ! Controller Set Point
+    sp = 500    
+
+    ! PID tuning parameters
+    op_bias = 10
+    kc   = 0.05
+    taui = 60
+    taud = 0
+
+    ! valve (c1) and outflow (c2) constants
+    c1 = 0.25           ! mL/sec
+    c2 = 0.14           ! mL^0.5/sec
+
+    ! empty tank volume
+    v0   = 268          ! mL
+
+    ! inlet valve opening
+    percent_open[1] = 10   ! %
+  End Parameters
+
+  Variables
+    percent_open[2] = 10   ! %
+    pv[1:2]
+    op[1:2]
+    error[1:2] = 0
+    proportional = 0
+    integral = 0
+    derivative = 0
+    pid_i = 0
+
+    inlet_flow[1:2]          ! mL/sec
+    outlet_flow[1:2]         ! mL/sec
+    volume[1:2]  = v0+1      ! mL
+  End Variables
+
+  Equations
+    inlet_flow[1:2]   = c1 * percent_open[1:2]
+    outlet_flow[1:2]  = c2 * SQRT(volume[1:2])
+
+    ! non-linear model
+    $volume[1:2] = inlet_flow[1:2] - outlet_flow[1:2]
+
+    ! pid response
+    pv[1:2] = volume[1:2]
+    op[1:2] = percent_open[1:2]
+    error[1:2] = sp - pv[1:2]
+    proportional = kc * error[2]
+    integral     = kc * pid_i / taui
+    derivative   = -kc * taud * $pv[2]
+    op[2] = op_bias + proportional + integral + derivative
+    ! calculate integral
+    $pid_i = sp - pv[2]
+  End Equations
+End Model

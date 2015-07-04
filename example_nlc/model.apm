@@ -1,0 +1,17 @@
+! APMonitor Model File
+Model
+  Parameters
+    p = 2.2  ! time constant
+    u = 1    ! manipulated variable
+  End Parameters
+
+  Variables
+    s        ! internal state
+    c        ! controlled variable
+  End Variables
+
+  Equations
+    p * $s + s = u
+    p * $c + c = s    
+  End Equations
+End Model

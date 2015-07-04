@@ -1,0 +1,100 @@
+Model
+  Parameters
+    ! reflux ratio
+    rr = 3.0, >=0.0, <=100
+
+    ! fraction of feed leaving from bottoms
+    fbot = 0.5, >=0.0, <=1.0
+
+    ! Feed Flowrate (mol/min)
+    Feed =  2.0, >=0
+    ! Mole Fraction of Feed
+    x_Feed = 0.5, >=0, <=1
+    ! Relative Volatility = (yA/xA)/(yB/xB) = KA/KB = alpha(A,B)
+    alpha = 1.6, >=0
+    ! Total Molar Holdup in the Condenser
+    atray=0.25, >=0
+    ! Total Molar Holdup on each Tray
+    acond=0.5, >=0
+    ! Total Molar Holdup in the Reboiler
+    areb=2.0, >=0
+
+    ! For trending the historical set points
+    sp_x[1] = 0.935
+    sp_x[32] = 0.065
+  End Parameters
+
+  Variables
+    ! mole fraction of component A at
+    ! (1) condenser
+    ! (30) trays
+    ! (1) reboiler
+    x[1:32]
+  End Variables
+
+  Intermediates
+    ! Assume constant molar holdups on trays / reboiler
+    ! Assume feed is liquid at bubble point
+    ! Distillate Flowrate (mol/min)
+    D=(1-fbot)*Feed
+    ! Flowrate of the Liquid in the Rectification Section (mol/min)
+    L=rr*D
+    ! Vapor Flowrate in the Column (mol/min)
+    V=L+D
+    ! Flowrate of the Liquid in the Stripping Section (mol/min)
+    FL=Feed+L
+
+    ! Vapor Mole Fractions of Component A
+    ! From the equilibrium assumption and mole balances
+    ! 1) alpha = (yA/xA) / (yB/xB),   xA + xB = 1,   yA + yB = 1
+    ! 2) alpha = yA xB / xA yB
+    ! 3) alpha = y(1-x) / x(1-y) (with x = xA, y = yA)
+    ! 4) alpha (x*y-x) = x*y - y
+    ! 5) y + alpha*x*y - x*y = x * alpha
+    ! 6) y*(1+alpha*x-x) = x*alpha
+    y[1:32] = x[1:32]*alpha/(1+(alpha-1)*x[1:32])
+  End Intermediates
+
+  Equations
+    ! condenser
+    acond * $x[1] = V*(y[2]-x[1])
+
+    ! 15 column stages
+    atray * $x[2:16]  = L*(x[1:15]-x[2:16]) - V*(y[2:16]-y[3:17])
+
+    ! feed tray
+    atray * $x[17] = Feed*x_Feed + L*x[16] - FL*x[17] - V*(y[17]-y[18])
+
+    ! 14 column stages
+    atray * $x[18:31] = FL*(x[17:30]-x[18:31]) - V*(y[18:31]-y[19:32])
+
+    ! reboiler
+    areb  * $x[32] = FL*x[31] - (Feed-D)*x[32] - V*y[32]
+  End Equations
+End Model
+
+File *.plt
+ New Trend
+  x[1]
+  x[2]
+  x[3]
+  x[5]
+  x[10]
+  x[15]
+  x[20]
+  x[25]
+  x[30]
+  x[31]
+  x[32]
+ New Trend
+  rr
+  fbot
+  x[1]
+  x[32]
+ New Trend
+  x[1]
+  sp_x[1]
+ New Trend
+  x[32]
+  sp_x[32]
+End File
