@@ -5,7 +5,8 @@ import os
 import random
 import string
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
+import socket
 import webbrowser
 from contextlib import closing
 
@@ -16,13 +17,15 @@ def apm(server,app,aline):
        aline  = line to send to server \n'''
     try:
         # Web-server URL address
-        url_base = string.strip(server) + '/online/apm_line.php'
+        url_base = server.strip() + '/online/apm_line.php'
         app = app.lower()
         app.replace(" ","")
-        params = urllib.urlencode({'p':app,'a':aline})
-        f = urllib.urlopen(url_base,params)
+        params = urllib.parse.urlencode({'p':app,'a':aline})
+        en_params = params.encode()
+        f = urllib.request.urlopen(url_base,en_params)
         # Send request to web-server
-        response = f.read()
+        en_response = f.read()
+        response = en_response.decode()
     except:
         response = 'Failed to connect to server'
     return response
@@ -59,9 +62,10 @@ def apm_ip(server):
     '''Get current IP address \n \
        server   = address of server'''
     # get ip address for web-address lookup
-    url_base = string.strip(server) + '/ip.php'
-    f = urllib.urlopen(url_base)
-    ip = string.strip(f.read())
+    url_base = server.strip() + '/ip.php'
+    f = urllib.request.urlopen(url_base)
+    fip = f.read()
+    ip = fip.decode().strip()
     return ip
 
 def apm_t0(server,app,mode):
@@ -74,8 +78,8 @@ def apm_t0(server,app,mode):
     # Web-server URL address
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/' + string.strip(mode) + '.t0'
-    f = urllib.urlopen(url)
+    url = server.strip() + '/online/' + ip + '_' + app + '/' + mode.strip() + '.t0'
+    f = urllib.request.urlopen(url)
     # Send request to web-server
     solution = f.read()
     return solution
@@ -89,8 +93,8 @@ def apm_sol(server,app):
     # Web-server URL address
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/results.csv'
-    f = urllib.urlopen(url)
+    url = server.strip() + '/online/' + ip + '_' + app + '/results.csv'
+    f = urllib.request.urlopen(url)
     # Send request to web-server
     solution = f.read()
 
@@ -98,18 +102,21 @@ def apm_sol(server,app):
     sol_file = 'solution_' + app + '.csv'
     fh = open(sol_file,'w')
     # possible problem here if file isn't able to open (see MATLAB equivalent)
-    fh.write(solution.replace('\r',''))
+    en_solution = solution.decode().replace('\r','')
+    fh.write(en_solution)
     fh.close()        
 
     # Use array package
     from array import array
     # Import CSV file from web server
-    with closing(urllib.urlopen(url)) as f:
-        reader = csv.reader(f, delimiter=',')
+    with closing(urllib.request.urlopen(url)) as f:
+        fr = f.read()
+        de_f = fr.decode()        
+        reader = csv.reader(de_f.splitlines(), delimiter=',')
         y={}
         for row in reader:
             if len(row)==2:
-                y[row[0]] = float(row[1])
+                y[row[0]] = row[1]#float(row[1])
             else:
                 y[row[0]] = array('f', [float(col) for col in row[1:]])
     # Return solution
@@ -125,8 +132,8 @@ def apm_get(server,app,filename):
     # Web-server URL address
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/' + filename
-    f = urllib.urlopen(url)
+    url = server.strip() + '/online/' + ip + '_' + app + '/' + filename
+    f = urllib.request.urlopen(url)
     # Send request to web-server
     file = f.read()
     # Write the file
@@ -156,8 +163,8 @@ def apm_web(server,app):
     # Web-server URL address    
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
-    webbrowser.open_new_tab(url)
+    url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
+    webbrowser.get(using='firefox').open_new_tab(url)
     return url
 
 def apm_web_var(server,app):
@@ -169,7 +176,7 @@ def apm_web_var(server,app):
     # Web-server URL address    
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_var.htm'
+    url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_var.htm'
     webbrowser.open_new_tab(url)
     return url
     
@@ -182,7 +189,7 @@ def apm_web_root(server,app):
     # Web-server URL address    
     app = app.lower()
     app.replace(" ","")
-    url = string.strip(server) + '/online/' + ip + '_' + app + '/'
+    url = server.strip() + '/online/' + ip + '_' + app + '/'
     webbrowser.open_new_tab(url)
     return url
 
@@ -209,7 +216,7 @@ def csv_data(filename):
     try:
         f = open(filename, 'rb')
         reader = csv.reader(f)
-        headers = reader.next()
+        headers = next(reader)
         c = [float] * (len(headers))
         A = {}
         for h in headers:
@@ -227,7 +234,7 @@ def csv_lookup(name,replay):
        replay   = csv replay data to search'''
     header = replay[0]
     try:
-        i = header.index(string.strip(name))
+        i = header.index(name.strip())
     except ValueError:
         i = -1 # no match
     return i
@@ -255,11 +262,12 @@ def apm_tag(server,app,name):
         {SV,CV}.MODEL \n \
         {FV,MV}.NEWVAL '''
     # Web-server URL address
-    url_base = string.strip(server) + '/online/get_tag.php'
+    url_base = server.strip() + '/online/get_tag.php'
     app = app.lower()
     app.replace(" ","")
-    params = urllib.urlencode({'p':app,'n':name})
-    f = urllib.urlopen(url_base,params)
+    params = urllib.parse.urlencode({'p':app,'n':name})
+    params_en = params.encode()
+    f = urllib.request.urlopen(url_base,params_en)
     # Send request to web-server
     value = eval(f.read())
     return value
@@ -270,11 +278,12 @@ def apm_meas(server,app,name,value):
        app      = application name \n \
        name     = name of {FV,MV,CV} '''
     # Web-server URL address
-    url_base = string.strip(server) + '/online/meas.php'
+    url_base = server.strip() + '/online/meas.php'
     app = app.lower()
     app.replace(" ","")
-    params = urllib.urlencode({'p':app,'n':name+'.MEAS','v':value})
-    f = urllib.urlopen(url_base,params)
+    params = urllib.parse.urlencode({'p':app,'n':name+'.MEAS','v':value})
+    params_en = params.encode()
+    f = urllib.request.urlopen(url_base,params_en)
     # Send request to web-server
     response = f.read()
     return response
@@ -326,7 +335,7 @@ def apm_solve(app,imode):
         apm_load(server,app,app_model)
     except:
         msg = 'Model file ' + app + '.apm does not exist'
-        print msg
+        print(msg)
         return []
 
     # check if data file exists (optional)
@@ -335,7 +344,7 @@ def apm_solve(app,imode):
         csv_load(server,app,app_data)
     except:
         # data file is optional
-        print 'Optional data file ' + app + '.csv does not exist'
+        print('Optional data file ' + app + '.csv does not exist')
         pass
     
     # default options
@@ -368,6 +377,6 @@ def apm_solve(app,imode):
         z = apm_sol(server,app)
         return z
     else:
-        print solver_output
-        print 'Error: Did not converge to a solution'
+        print(solver_output)
+        print('Error: Did not converge to a solution')
         return []

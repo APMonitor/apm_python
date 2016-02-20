@@ -20,7 +20,7 @@ apm_load(server,app,'model.apm')
 csv_load(server,app,'model.csv')
 
 # Load replay replay data for local use
-data = csv.reader(open('replay.csv', 'rb'))
+data = csv.reader(open('replay.csv', 'r'))
 replay = []
 for row in data:
 	replay.append(row)
@@ -77,8 +77,8 @@ apm_option(server,app,'u.status',1)
 apm_option(server,app,'u.fstatus',0)
 
 for isim in range(1, len_replay-1):
-	print ''
-	print '--- Cycle %i of %i ---' %(isim,len_replay)
+	print ('')
+	print ('--- Cycle %i of %i ---' %(isim,len_replay-2))
 
 	time.sleep(1)
 
@@ -86,29 +86,29 @@ for isim in range(1, len_replay-1):
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print (response)
 	for x in MVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print (response)
 	for x in CVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print (response)
 
 	# schedule a set point change at cycle 4
 	if (isim==4): apm_option(server,app,'c.sp',8)
 
 	# Run NLC on APM server
 	solver_output = apm(server,app,'solve')
-	print solver_output
+	print (solver_output)
 
-	if (isim==1):
-		# Open Web Viewer and Display Link
-		print "Opening web viewer"
-		url = apm_web(server,app)
+	#if (isim==1):
+	#	# Open Web Viewer and Display Link
+	#	print ("Opening web viewer")
+	#	url = apm_web(server,app)
 
 	# Retrieve results (MEAS,MODEL,NEWVAL)
 	# MEAS = FV, MV,or CV measured values
@@ -119,8 +119,8 @@ for isim in range(1, len_replay-1):
 	s = apm_tag(server,app,'s.MODEL')
 	c = apm_tag(server,app,'c.MODEL')
 
-	print 'Measured p: %f' %(p)
-	print 'Optimized u: %f' %(u)
-	print 'Predicted s: %f' %(s)
-	print 'Predicted c: %f' %(c)
+	print('Measured p: %f' %(p))
+	print('Optimized u: %f' %(u))
+	print('Predicted s: %f' %(s))
+	print('Predicted c: %f' %(c))
 	

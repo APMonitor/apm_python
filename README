@@ -1,0 +1,5 @@
+APMonitor Optimization Suite
+
+The APMonitor Modeling Language is optimization software for mixed-integer and differential algebraic equations. It is coupled with large-scale solvers for linear, quadratic, nonlinear, and mixed integer programming (LP, QP, NLP, MILP, MINLP). Modes of operation include data reconciliation, real-time optimization, dynamic simulation, and nonlinear predictive control. It is freely available through MATLAB, Python, or from a web browser interface.
+
+Two versions are available including Python 2.7 (see apm2.py) and Python 3.5 (see apm3.py). The default apm.py is the Python 2.7 version although the benchmark example problems work with either apm*.py file when it is renamed to apm.py.

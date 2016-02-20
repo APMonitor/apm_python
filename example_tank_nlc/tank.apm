@@ -14,7 +14,7 @@ File *.plt
     op[2]
   New Trend
     proportional
-    integral
+    pintegral
     derivative
     op[2]
 End File
@@ -47,7 +47,7 @@ Model
     op[1:2]
     error[1:2] = 0
     proportional = 0
-    integral = 0
+    pintegral = 0
     derivative = 0
     pid_i = 0
 
@@ -68,10 +68,10 @@ Model
     op[1:2] = percent_open[1:2]
     error[1:2] = sp - pv[1:2]
     proportional = kc * error[2]
-    integral     = kc * pid_i / taui
+    pintegral     = kc * pid_i / taui
     derivative   = -kc * taud * $pv[2]
-    op[2] = op_bias + proportional + integral + derivative
-    ! calculate integral
+    op[2] = op_bias + proportional + pintegral + derivative
+    ! calculate pintegral
     $pid_i = sp - pv[2]
   End Equations
 End Model

@@ -21,10 +21,10 @@ apm_load(server,app,'tank.apm')
 csv_load(server,app,'tank.csv')
 
 # Load replay replay data for local use
-data = csv.reader(open('replay.csv', 'rb'))
-#data = csv.reader(open('replay1.csv', 'rb'))
-#data = csv.reader(open('replay2.csv', 'rb'))
-#data = csv.reader(open('replay3.csv', 'rb'))
+data = csv.reader(open('replay.csv', 'r'))
+#data = csv.reader(open('replay1.csv', 'r'))
+#data = csv.reader(open('replay2.csv', 'r'))
+#data = csv.reader(open('replay3.csv', 'r'))
 replay = []
 for row in data:
 	replay.append(row)
@@ -101,8 +101,8 @@ apm_option(server,app,'percent_open[1].status',1)
 apm_option(server,app,'percent_open[1].fstatus',0)
 
 for isim in range(1, len_replay-1):
-	print ''
-	print '--- Cycle %i of %i ---' %(isim,len_replay)
+	print('')
+	print('--- Cycle %i of %i ---' %(isim,len_replay-2))
 
 	# allow server to process other requests
 	time.sleep(0.1)
@@ -111,46 +111,46 @@ for isim in range(1, len_replay-1):
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in MVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in CVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 
 	# schedule a set point change at cycle 40
 	#if (isim==4): apm_option(server,app,'volume.sp',50)
 
 	# Run NLC on APM server
 	solver_output = apm(server,app,'solve')
-	print solver_output
-	print "Finished Solving"
+	print(solver_output)
+	print("Finished Solving")
 	
 	# Retrieve results
 	array = apm_sol(server,app)
 
-	if (isim==1):
-		# Open Web Viewer and Display Link
-		print "Opening web viewer"
-		url = apm_web(server,app)
+	#if (isim==1):
+	#	# Open Web Viewer and Display Link
+	#	print("Opening web viewer")
+	#	url = apm_web(server,app)
 
 	# Retrieve results (MEAS,MODEL,NEWVAL)
 	# MEAS = FV, MV,or CV measured values
 	# MODEL = SV & CV predicted values
 	# NEWVAL = FV & MV optimized values
 
-print '--- Available Variables ---'
-print array.keys()
+print('--- Available Variables ---')
+print(array.keys())
 
 # Plotting
 from matplotlib import pyplot
 x = array['time']
-print x
+print(x)
 y = array['percent_open[1]']
 pyplot.plot(x, y)
 pyplot.xlabel('Time')

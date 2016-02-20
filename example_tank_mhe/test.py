@@ -21,9 +21,9 @@ apm_load(server,app,'tank.apm')
 csv_load(server,app,'tank.csv')
 
 # Load replay replay data for local use
-#data = csv.reader(open('replay1.csv', 'rb'))
-#data = csv.reader(open('replay2.csv', 'rb'))
-data = csv.reader(open('replay3.csv', 'rb'))
+#data = csv.reader(open('replay1.csv', 'r'))
+#data = csv.reader(open('replay2.csv', 'r'))
+data = csv.reader(open('replay3.csv', 'r'))
 replay = []
 for row in data:
 	replay.append(row)
@@ -107,8 +107,8 @@ apm_option(server,app,'vol_lin.fstatus',1)
 #apm_option(server,app,'percent_open.fstatus',0)
 
 for isim in range(1, 5):
-	print ''
-	print '--- Cycle %i of %i ---' %(isim,4)
+	print('')
+	print('--- Cycle %i of %i ---' %(isim,4))
 
 	# allow server to process other requests
 	time.sleep(0.1)
@@ -117,38 +117,38 @@ for isim in range(1, 5):
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in MVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in CVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 
 	# schedule a set point change at cycle 40
 	#if (isim==4): apm_option(server,app,'volume.sp',50)
 
 	# Run NLC on APM server
 	solver_output = apm(server,app,'solve')
-	print solver_output
+	print(solver_output)
 
-	if (isim==1):
-		# Open Web Viewer and Display Link
-		print "Opening web viewer"
-		url = apm_web(server,app)
+	#if (isim==1):
+	#	# Open Web Viewer and Display Link
+	#	print "Opening web viewer"
+	#	url = apm_web(server,app)
 
 	# Retrieve results (MEAS,MODEL,NEWVAL)
 	# MEAS = FV, MV,or CV measured values
 	# MODEL = SV & CV predicted values
 	# NEWVAL = FV & MV optimized values
-	percent_open = apm_tag(server,app,'percent_open.NEWVAL')
-	volume_meas = apm_tag(server,app,'volume.MEAS')
-	volume_model = apm_tag(server,app,'volume.MODEL')
+	percent_open = apm_tag(server,app,'percent_open.newval')
+	volume_meas = apm_tag(server,app,'volume.meas')
+	volume_model = apm_tag(server,app,'volume.model')
 
-	print 'Percent_open: %f' %(percent_open)
-	print 'Measured volume: %f' %(volume_meas)
-	print 'Predicted volume: %f' %(volume_model)
+	print('Percent_open: %f' %(percent_open))
+	print('Measured volume: %f' %(volume_meas))
+	print('Predicted volume: %f' %(volume_model))

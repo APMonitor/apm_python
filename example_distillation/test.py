@@ -20,7 +20,7 @@ apm_load(server,app,'distill.apm')
 csv_load(server,app,'horizon_ctl.csv')
 
 # Load replay replay data for local use
-data = csv.reader(open('replay_ctl.csv', 'rb'))
+data = csv.reader(open('replay_ctl.csv', 'r'))
 replay = []
 for row in data:
 	replay.append(row)
@@ -98,15 +98,15 @@ apm_option(server,app,'nlc.sensitivity',1)
 
 # steady state solution
 solver_output = apm(server,app,'solve')
-print solver_output
+print(solver_output)
 
 # imode (1=ss, 2=mpu, 3=rto, 4=sim, 5=mhe, 6=nlc)
 apm_option(server,app,'nlc.imode',6)
 apm_option(server,app,'nlc.sensitivity',0)
 
 for isim in range(1, 5):
-	print ''
-	print '--- Cycle %i of %i ---' %(isim,4)
+	print('')
+	print('--- Cycle %i of %i ---' %(isim,4))
 
 	# allow server to process other requests
 	time.sleep(0.1)
@@ -120,7 +120,7 @@ for isim in range(1, 5):
 		apm_option(server,app,'x[1].splo',0.952)
 		apm_option(server,app,'x[1].status',1)
 		apm_meas(server,app,'sp_x[1]',0.952)
-                # turn on bottoms composition control
+		# turn on bottoms composition control
 		apm_option(server,app,'fbot.status',1)
 		apm_option(server,app,'x[32].sphi',0.019)
 		apm_option(server,app,'x[32].splo',0.019)
@@ -140,24 +140,24 @@ for isim in range(1, 5):
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in MVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 	for x in CVs:
 		value = csv_element(x,isim,replay)
 		if (not math.isnan(value)):
 			response = apm_meas(server,app,x,value)
-			print response
+			print(response)
 
 	# Run NLC on APM server
 	solver_output = apm(server,app,'solve')
-	#print solver_output
+	print(solver_output)
 
-	if (isim==1):
-		# Open Web Viewer and Display Link
-		print "Opening web viewer"
-		url = apm_web(server,app)
+	#if (isim==1):
+	#	# Open Web Viewer and Display Link
+	#	print "Opening web viewer"
+	#	url = apm_web(server,app)
 
