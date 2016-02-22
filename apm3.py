@@ -164,7 +164,7 @@ def apm_web(server,app):
     app = app.lower()
     app.replace(" ","")
     url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
-    webbrowser.get(using='firefox').open_new_tab(url)
+    webbrowser.open_new_tab(url)
     return url
 
 def apm_web_var(server,app):

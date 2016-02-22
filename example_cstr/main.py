@@ -126,10 +126,10 @@ for isim in range(1, len_replay-1):
 	solver_output = apm(server,app,'solve')
 	print(solver_output)
 
-	#if (isim==1):
+	if (isim==1):
 		# Open Web Viewer and Display Link
-		#print("Opening web viewer")
-		#url = apm_web(server,app)
+		print("Opening web viewer")
+		url = apm_web(server,app)
 
 	# Retrieve results (MEAS,MODEL,NEWVAL)
 	# MEAS = FV, MV,or CV measured values
