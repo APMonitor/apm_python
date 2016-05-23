@@ -7,7 +7,7 @@ import string
 import time
 import webbrowser
 from contextlib import closing
-import sys 
+import sys
 
 # Get Python version
 ver = sys.version_info[0]

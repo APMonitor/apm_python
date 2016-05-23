@@ -7,7 +7,7 @@ import string
 import time
 import webbrowser
 from contextlib import closing
-import urllib.request, urllib.parse, urllib.error 
+import urllib.request, urllib.parse, urllib.error
 
 def apm(server,app,aline):
     '''Send a request to the server \n \
