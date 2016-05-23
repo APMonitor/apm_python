@@ -5,10 +5,9 @@ import os
 import random
 import string
 import time
-import urllib.request, urllib.parse, urllib.error
-import socket
 import webbrowser
 from contextlib import closing
+import urllib.request, urllib.parse, urllib.error
 
 def apm(server,app,aline):
     '''Send a request to the server \n \

@@ -5,9 +5,9 @@ import os
 import random
 import string
 import time
-import urllib
 import webbrowser
 from contextlib import closing
+import urllib
 
 def apm(server,app,aline):
     '''Send a request to the server \n \
@@ -263,21 +263,6 @@ def apm_tag(server,app,name):
     # Send request to web-server
     value = eval(f.read())
     return value
-
-def apm_meas(server,app,name,value):
-    '''Transfer measurement to server for FV, MV, or CV \n \
-       server   = address of server \n \
-       app      = application name \n \
-       name     = name of {FV,MV,CV} '''
-    # Web-server URL address
-    url_base = string.strip(server) + '/online/meas.php'
-    app = app.lower()
-    app.replace(" ","")
-    params = urllib.urlencode({'p':app,'n':name+'.MEAS','v':value})
-    f = urllib.urlopen(url_base,params)
-    # Send request to web-server
-    response = f.read()
-    return response
 
 def apm_solve(app,imode):
     '''
