@@ -167,7 +167,7 @@ if ver==2:  # Python 2
         app = app.lower()
         app.replace(" ","")
         url = string.strip(server) + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
 
     def apm_web_var(server,app):
@@ -180,7 +180,7 @@ if ver==2:  # Python 2
         app = app.lower()
         app.replace(" ","")
         url = string.strip(server) + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_var.htm'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
         
     def apm_web_root(server,app):
@@ -193,7 +193,7 @@ if ver==2:  # Python 2
         app = app.lower()
         app.replace(" ","")
         url = string.strip(server) + '/online/' + ip + '_' + app + '/'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
 
     def apm_info(server,app,type,aline):
@@ -430,7 +430,7 @@ else:       # Python 3+
         app = app.lower()
         app.replace(" ","")
         url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
 
     def apm_web_var(server,app):
@@ -443,7 +443,7 @@ else:       # Python 3+
         app = app.lower()
         app.replace(" ","")
         url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_var.htm'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
         
     def apm_web_root(server,app):
@@ -456,7 +456,7 @@ else:       # Python 3+
         app = app.lower()
         app.replace(" ","")
         url = server.strip() + '/online/' + ip + '_' + app + '/'
-        webbrowser.open_new_tab(url)
+        webbrowser.get().open_new_tab(url)
         return url
 
     def apm_info(server,app,type,aline):

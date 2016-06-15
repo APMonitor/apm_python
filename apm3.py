@@ -163,7 +163,7 @@ def apm_web(server,app):
     app = app.lower()
     app.replace(" ","")
     url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_oper.htm'
-    webbrowser.open_new_tab(url)
+    webbrowser.get().open_new_tab(url)
     return url
 
 def apm_web_var(server,app):
@@ -176,7 +176,7 @@ def apm_web_var(server,app):
     app = app.lower()
     app.replace(" ","")
     url = server.strip() + '/online/' + ip + '_' + app + '/' + ip + '_' + app + '_var.htm'
-    webbrowser.open_new_tab(url)
+    webbrowser.get().open_new_tab(url)
     return url
     
 def apm_web_root(server,app):
@@ -189,7 +189,7 @@ def apm_web_root(server,app):
     app = app.lower()
     app.replace(" ","")
     url = server.strip() + '/online/' + ip + '_' + app + '/'
-    webbrowser.open_new_tab(url)
+    webbrowser.get().open_new_tab(url)
     return url
 
 def apm_info(server,app,type,aline):
