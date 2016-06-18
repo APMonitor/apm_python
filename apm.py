@@ -274,6 +274,21 @@ if ver==2:  # Python 2
         value = eval(f.read())
         return value
 
+    def apm_meas(server,app,name,value):
+        '''Transfer measurement to server for FV, MV, or CV \n \
+           server   = address of server \n \
+           app      = application name \n \
+           name     = name of {FV,MV,CV} '''
+        # Web-server URL address
+        url_base = string.strip(server) + '/online/meas.php'
+        app = app.lower()
+        app.replace(" ","")
+        params = urllib.urlencode({'p':app,'n':name+'.MEAS','v':value})
+        f = urllib.urlopen(url_base,params)
+        # Send request to web-server
+        response = f.read()
+        return response
+
 else:       # Python 3+
     
     def apm(server,app,aline):
