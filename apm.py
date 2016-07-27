@@ -419,7 +419,8 @@ else:       # Python 3+
         file = f.read()
         # Write the file
         fh = open(filename,'w')
-        fh.write(file.replace('\r',''))
+        en_file = file.decode().replace('\r','')
+        fh.write(en_file)
         fh.close()
         return (file)
 
