@@ -115,7 +115,7 @@ def apm_sol(server,app):
         y={}
         for row in reader:
             if len(row)==2:
-                y[row[0]] = row[1]#float(row[1])
+                y[row[0]] = float(row[1])
             else:
                 y[row[0]] = array('f', [float(col) for col in row[1:]])
     # Return solution
