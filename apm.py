@@ -662,3 +662,64 @@ def apm_solve(app,imode):
         print(solver_output)
         print('Error: Did not converge to a solution')
         return []
+
+def plotter(y, subplots=1, save=False, filename='solution', format='png'):
+    '''
+    The plotter will go through each of the variables in the output y and
+      create plots for them. The number of vertical subplots can be
+      specified and the plots can be saved in the same folder.
+
+    This functionality is dependant on matplotlib, so this library must
+      be installed on the computer for the automatic plotter to work.
+
+    The input y should be the output from the apm solution. This can be
+      retrieved from the server using the following line of code:
+      y = apm_sol(server, app)
+    '''
+    try:
+        import matplotlib.pyplot as plt
+        var_size = len(y)
+        colors = ['r-', 'g-', 'k-', 'b-']
+        color_pick = 0
+        if subplots > 9:
+            subplots = 9
+        j = 1
+        pltcount = 0
+        start = True
+        for i in range(var_size):
+            if list(y)[i] != 'time' and list(y)[i][:3] != 'slk':
+                if j == 1:
+                    if start != True:
+                        plt.xlabel('time')
+                    start = False
+                    if save:
+                        if pltcount != 0:
+                            plt.savefig(filename + str(pltcount) + '.' + format, format=format)
+                        pltcount += 1
+                    plt.figure()
+                else:
+                    plt.gca().axes.get_xaxis().set_ticklabels([])
+                plt.subplot(100*subplots+10+j)
+                plt.plot(y['time'], y[list(y)[i]], colors[color_pick], linewidth=2.0)
+                if color_pick == 3:
+                    color_pick = 0
+                else:
+                    color_pick += 1
+                plt.ylabel(list(y)[i])
+                if subplots == 1:
+                    plt.title(list(y)[i])
+                if j == subplots or i+2 == var_size:
+                    j = 1
+                else:
+                    j += 1
+        plt.xlabel('time')
+        if save:
+            plt.savefig('plots/' + filename + str(pltcount) + '.' + format, format=format)
+        if pltcount <= 20:
+            plt.show()
+    except ImportError:
+        print('Dependent Packages not imported.')
+        print('Please install matplotlib package to use plotting features.')
+    except:
+        print('Graphs not created. Double check that the')
+        print('simulation/optimization was succesfull')
