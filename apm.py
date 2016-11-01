@@ -19,7 +19,7 @@ else:       # Python 3+
     #import socket
 
 if ver==2:  # Python 2
-    def apm(server,app,aline):
+    def cmd(server,app,aline):
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
@@ -37,7 +37,7 @@ if ver==2:  # Python 2
             response = 'Failed to connect to server'
         return response
 
-    def apm_load(server,app,filename):
+    def load_model(server,app,filename):
         '''Load APM model file \n \
            server   = address of server \n \
            app      = application name \n \
@@ -48,10 +48,10 @@ if ver==2:  # Python 2
         f.close()
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,' '+aline)
+        response = cmd(server,app,' '+aline)
         return
 
-    def csv_load(server,app,filename):
+    def load_data(server,app,filename):
         '''Load CSV data file \n \
            server   = address of server \n \
            app      = application name \n \
@@ -62,10 +62,10 @@ if ver==2:  # Python 2
         f.close()
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,'csv '+aline)
+        response = cmd(server,app,'csv '+aline)
         return
 
-    def apm_ip(server):
+    def get_ip(server):
         '''Get current IP address \n \
            server   = address of server'''
         # get ip address for web-address lookup
@@ -80,7 +80,7 @@ if ver==2:  # Python 2
            app      = application name \n \
            mode = {'ss','mpu','rto','sim','est','ctl'} '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -90,12 +90,12 @@ if ver==2:  # Python 2
         solution = f.read()
         return solution
 
-    def apm_sol(server,app):
+    def get_solution(server,app):
         '''Retrieve solution results\n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -126,12 +126,12 @@ if ver==2:  # Python 2
         return y
 
 
-    def apm_get(server,app,filename):
+    def get_file(server,app,filename):
         '''Retrieve any file from web-server\n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -145,7 +145,7 @@ if ver==2:  # Python 2
         fh.close()
         return (file)
 
-    def apm_option(server,app,name,value):
+    def set_option(server,app,name,value):
         '''Load APM option \n \
            server   = address of server \n \
            app      = application name \n \
@@ -154,15 +154,15 @@ if ver==2:  # Python 2
         aline = 'option %s = %f' %(name,value)
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,aline)
+        response = cmd(server,app,aline)
         return response
 
-    def apm_web(server,app):
+    def web(server,app):
         '''Open APM web viewer in local browser \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -170,12 +170,12 @@ if ver==2:  # Python 2
         webbrowser.get().open_new_tab(url)
         return url
 
-    def apm_web_var(server,app):
+    def web_var(server,app):
         '''Open APM web viewer in local browser \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -183,12 +183,12 @@ if ver==2:  # Python 2
         webbrowser.get().open_new_tab(url)
         return url
         
-    def apm_web_root(server,app):
+    def web_root(server,app):
         '''Open APM root folder \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -196,7 +196,7 @@ if ver==2:  # Python 2
         webbrowser.get().open_new_tab(url)
         return url
 
-    def apm_info(server,app,type,aline):
+    def classify(server,app,type,aline):
         '''Classify parameter or variable as FV, MV, SV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -205,7 +205,7 @@ if ver==2:  # Python 2
         x = 'info' + ' ' +  type + ', ' + aline
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,x)
+        response = cmd(server,app,x)
         return response
 
 
@@ -255,7 +255,7 @@ if ver==2:  # Python 2
         else: value = float('nan')
         return value
 
-    def apm_tag(server,app,name):
+    def get_attribute(server,app,name):
         '''Retrieve options for FV, MV, SV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -274,7 +274,7 @@ if ver==2:  # Python 2
         value = eval(f.read())
         return value
 
-    def apm_meas(server,app,name,value):
+    def load_meas(server,app,name,value):
         '''Transfer measurement to server for FV, MV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -291,7 +291,7 @@ if ver==2:  # Python 2
 
 else:       # Python 3+
     
-    def apm(server,app,aline):
+    def cmd(server,app,aline):
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
@@ -311,7 +311,7 @@ else:       # Python 3+
             response = 'Failed to connect to server'
         return response
 
-    def apm_load(server,app,filename):
+    def load_model(server,app,filename):
         '''Load APM model file \n \
            server   = address of server \n \
            app      = application name \n \
@@ -322,10 +322,10 @@ else:       # Python 3+
         f.close()
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,' '+aline)
+        response = cmd(server,app,' '+aline)
         return
 
-    def csv_load(server,app,filename):
+    def load_data(server,app,filename):
         '''Load CSV data file \n \
            server   = address of server \n \
            app      = application name \n \
@@ -336,10 +336,10 @@ else:       # Python 3+
         f.close()
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,'csv '+aline)
+        response = cmd(server,app,'csv '+aline)
         return
 
-    def apm_ip(server):
+    def get_ip(server):
         '''Get current IP address \n \
            server   = address of server'''
         # get ip address for web-address lookup
@@ -355,7 +355,7 @@ else:       # Python 3+
            app      = application name \n \
            mode = {'ss','mpu','rto','sim','est','ctl'} '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -365,12 +365,12 @@ else:       # Python 3+
         solution = f.read()
         return solution
 
-    def apm_sol(server,app):
+    def get_solution(server,app):
         '''Retrieve solution results\n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -404,12 +404,12 @@ else:       # Python 3+
         return y
 
 
-    def apm_get(server,app,filename):
+    def get_file(server,app,filename):
         '''Retrieve any file from web-server\n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address
         app = app.lower()
         app.replace(" ","")
@@ -424,7 +424,7 @@ else:       # Python 3+
         fh.close()
         return (file)
 
-    def apm_option(server,app,name,value):
+    def set_option(server,app,name,value):
         '''Load APM option \n \
            server   = address of server \n \
            app      = application name \n \
@@ -433,15 +433,15 @@ else:       # Python 3+
         aline = 'option %s = %f' %(name,value)
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,aline)
+        response = cmd(server,app,aline)
         return response
 
-    def apm_web(server,app):
+    def web(server,app):
         '''Open APM web viewer in local browser \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -449,12 +449,12 @@ else:       # Python 3+
         webbrowser.get().open_new_tab(url)
         return url
 
-    def apm_web_var(server,app):
+    def web_var(server,app):
         '''Open APM web viewer in local browser \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -462,12 +462,12 @@ else:       # Python 3+
         webbrowser.get().open_new_tab(url)
         return url
         
-    def apm_web_root(server,app):
+    def web_root(server,app):
         '''Open APM root folder \n \
            server   = address of server \n \
            app      = application name '''
         # Retrieve IP address
-        ip = apm_ip(server)
+        ip = get_ip(server)
         # Web-server URL address    
         app = app.lower()
         app.replace(" ","")
@@ -475,7 +475,7 @@ else:       # Python 3+
         webbrowser.get().open_new_tab(url)
         return url
 
-    def apm_info(server,app,type,aline):
+    def classify(server,app,type,aline):
         '''Classify parameter or variable as FV, MV, SV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -484,7 +484,7 @@ else:       # Python 3+
         x = 'info' + ' ' +  type + ', ' + aline
         app = app.lower()
         app.replace(" ","")
-        response = apm(server,app,x)
+        response = cmd(server,app,x)
         return response
 
 
@@ -534,7 +534,7 @@ else:       # Python 3+
         else: value = float('nan')
         return value
 
-    def apm_tag(server,app,name):
+    def get_attribute(server,app,name):
         '''Retrieve options for FV, MV, SV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -554,7 +554,7 @@ else:       # Python 3+
         value = eval(f.read())
         return value
 
-    def apm_meas(server,app,name,value):
+    def load_meas(server,app,name,value):
         '''Transfer measurement to server for FV, MV, or CV \n \
            server   = address of server \n \
            app      = application name \n \
@@ -570,15 +570,15 @@ else:       # Python 3+
         response = f.read()
         return response
 
-def apm_solve(app,imode):
+def solve(app,imode):
     '''
      APM Solver for simulation, estimation, and optimization with both
       static (steady-state) and dynamic models. The dynamic modes can solve
       index 2+ DAEs without numerical differentiation.
      
-     y = apm_solve(app,imode)
+     y = solve(app,imode)
     
-     Function apm_solve uploads the model file (apm) and optionally
+     Function solve uploads the model file (apm) and optionally
        a data file (csv) with the same name to the web-server and performs
        a forward-time stepping integration of ODE or DAE equations
        with the following arguments:
@@ -610,11 +610,11 @@ def apm_solve(app,imode):
     app = app + '_' + str(randint(1000,9999))
     
     # clear previous application
-    apm(server,app,'clear all')
+    cmd(server,app,'clear all')
 
     try:
         # load model file
-        apm_load(server,app,app_model)
+        load_model(server,app,app_model)
     except:
         msg = 'Model file ' + app + '.apm does not exist'
         print(msg)
@@ -623,7 +623,7 @@ def apm_solve(app,imode):
     # check if data file exists (optional)
     try:
         # load data file
-        csv_load(server,app,app_data)
+        load_data(server,app,app_data)
     except:
         # data file is optional
         print('Optional data file ' + app + '.csv does not exist')
@@ -633,30 +633,30 @@ def apm_solve(app,imode):
     # use or don't use web viewer
     web = False
     if web:
-        apm_option(server,app,'nlc.web',2)
+        set_option(server,app,'nlc.web',2)
     else:
-        apm_option(server,app,'nlc.web',0)
+        set_option(server,app,'nlc.web',0)
 
     # internal nodes in the collocation (between 2 and 6)
-    apm_option(server,app,'nlc.nodes',3)
+    set_option(server,app,'nlc.nodes',3)
     # sensitivity analysis (default: 0 - off)
-    apm_option(server,app,'nlc.sensitivity',0)
+    set_option(server,app,'nlc.sensitivity',0)
     # simulation mode (1=ss,  2=mpu, 3=rto)
     #                 (4=sim, 5=est, 6=nlc, 7=sqs)
-    apm_option(server,app,'nlc.imode',imode)
+    set_option(server,app,'nlc.imode',imode)
 
     # attempt solution
-    solver_output = apm(server,app,'solve')
+    solver_output = cmd(server,app,'solve')
 
     # check for successful solution
-    status = apm_tag(server,app,'nlc.appstatus')
+    status = get_attribute(server,app,'nlc.appstatus')
 
     if status==1:
         # open web viewer if selected
         if web:
-            apm_web(server,app)
+            web(server,app)
         # retrieve solution and solution.csv
-        z = apm_sol(server,app)
+        z = get_solution(server,app)
         return z
     else:
         print(solver_output)
@@ -674,7 +674,7 @@ def plotter(y, subplots=1, save=False, filename='solution', format='png'):
 
     The input y should be the output from the apm solution. This can be
       retrieved from the server using the following line of code:
-      y = apm_sol(server, app)
+      y = get_solution(server, app)
     '''
     try:
         import matplotlib.pyplot as plt
@@ -723,3 +723,20 @@ def plotter(y, subplots=1, save=False, filename='solution', format='png'):
     except:
         print('Graphs not created. Double check that the')
         print('simulation/optimization was succesfull')
+
+# This code adds back compatibility with previous versions
+
+apm = cmd
+apm_load = load_model
+csv_load = load_data
+apm_ip = get_ip
+apm_sol = get_solution
+apm_get = get_file
+apm_option = set_option
+apm_web = web
+apm_web_var = web_var
+apm_web_root = web_root
+apm_info = classify
+apm_tag = get_attribute
+apm_meas = load_meas
+apm_solve = solve
