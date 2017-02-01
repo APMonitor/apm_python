@@ -19,7 +19,8 @@ else:       # Python 3+
     #import socket
 
 if ver==2:  # Python 2
-    def cmd(server,app,aline):
+
+    def cmd(server, app, aline):
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
@@ -28,9 +29,21 @@ if ver==2:  # Python 2
             # Web-server URL address
             url_base = string.strip(server) + '/online/apm_line.php'
             app = app.lower()
-            app.replace(" ","")
-            params = urllib.urlencode({'p':app,'a':aline})
-            f = urllib.urlopen(url_base,params)
+            app.replace(" ", "")
+            params = urllib.urlencode({'p': app, 'a': aline})
+            f = urllib.urlopen(url_base, params)
+            # Stream solution output
+            if(aline=='solve'):
+                line = ''
+                while True:
+                    char = f.read(1)
+                    if not char:
+                        break
+                    elif char == '\n':
+                        print(line)
+                        line = ''
+                    else:
+                        line += char
             # Send request to web-server
             response = f.read()
         except:
@@ -304,6 +317,19 @@ else:       # Python 3+
             params = urllib.parse.urlencode({'p':app,'a':aline})
             en_params = params.encode()
             f = urllib.request.urlopen(url_base,en_params)
+            # Stream solution output
+            if(aline=='solve'):
+                line = ''
+                while True:
+                    en_char = f.read(1)
+                    char = en_char.decode()
+                    if not char:
+                        break
+                    elif char == '\n':
+                        print(line)
+                        line = ''
+                    else:
+                        line += char
             # Send request to web-server
             en_response = f.read()
             response = en_response.decode()
