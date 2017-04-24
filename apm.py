@@ -596,13 +596,13 @@ else:       # Python 3+
         response = f.read()
         return response
 
-def solve(app,imode):
+def solve(app,imode,web_option=False):
     '''
      APM Solver for simulation, estimation, and optimization with both
       static (steady-state) and dynamic models. The dynamic modes can solve
       index 2+ DAEs without numerical differentiation.
      
-     y = solve(app,imode)
+     y = solve(app,imode,web_option=False)
     
      Function solve uploads the model file (apm) and optionally
        a data file (csv) with the same name to the web-server and performs
@@ -613,8 +613,9 @@ def solve(app,imode):
                 imode = simulation mode {1..7}
                                    steady-state  dynamic  sequential
                         simulate     1             4        7
-                        estimate     2             5        8 (under dev)
-                        optimize     3             6        9 (under dev)
+                        estimate     2             5        8
+                        optimize     3             6        9
+           web_option = open web-viewer
     
      Output: y.names  = names of all variables
              y.values = tables of values corresponding to y.names
@@ -657,8 +658,7 @@ def solve(app,imode):
     
     # default options
     # use or don't use web viewer
-    web = False
-    if web:
+    if web_option:
         set_option(server,app,'nlc.web',2)
     else:
         set_option(server,app,'nlc.web',0)
@@ -679,7 +679,7 @@ def solve(app,imode):
 
     if status==1:
         # open web viewer if selected
-        if web:
+        if web_option:
             web(server,app)
         # retrieve solution and solution.csv
         z = get_solution(server,app)
