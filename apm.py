@@ -145,18 +145,22 @@ if ver==2:  # Python 2
            app      = application name '''
         # Retrieve IP address
         ip = get_ip(server)
-        # Web-server URL address
-        app = app.lower()
-        app.replace(" ","")
-        url = string.strip(server) + '/online/' + ip + '_' + app + '/' + filename
-        f = urllib.urlopen(url)
-        # Send request to web-server
-        file = f.read()
-        # Write the file
-        fh = open(filename,'w')
-        fh.write(file.replace('\r',''))
-        fh.close()
-        return (file)
+        try:
+            # Web-server URL address
+            app = app.lower()
+            app.replace(" ","")
+            url = string.strip(server) + '/online/' + ip + '_' + app + '/' + filename
+            f = urllib.urlopen(url)
+            # Send request to web-server
+            file = f.read()
+            # Write the file
+            fh = open(filename,'w')
+            fh.write(file.replace('\r',''))
+            fh.close()
+            return (file)
+        except:
+            print('Could not retrieve ' + filename + ' from server')
+            return []
 
     def set_option(server,app,name,value):
         '''Load APM option \n \
@@ -436,19 +440,24 @@ else:       # Python 3+
            app      = application name '''
         # Retrieve IP address
         ip = get_ip(server)
-        # Web-server URL address
-        app = app.lower()
-        app.replace(" ","")
-        url = server.strip() + '/online/' + ip + '_' + app + '/' + filename
-        f = urllib.request.urlopen(url)
-        # Send request to web-server
-        file = f.read()
-        # Write the file
-        fh = open(filename,'w')
-        en_file = file.decode().replace('\r','')
-        fh.write(en_file)
-        fh.close()
-        return (file)
+        try:
+            # Web-server URL address
+            app = app.lower()
+            app.replace(" ","")
+            url = server.strip() + '/online/' + ip + '_' + app + '/' + filename
+            f = urllib.request.urlopen(url)
+            # Send request to web-server
+            file = f.read()
+            # Write the file
+            fh = open(filename,'w')
+            en_file = file.decode().replace('\r','')
+            fh.write(en_file)
+            fh.close()
+            return (file)
+        except:
+            print('Could not retrieve ' + filename + ' from server')
+            return []
+            
 
     def set_option(server,app,name,value):
         '''Load APM option \n \
