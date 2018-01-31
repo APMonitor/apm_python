@@ -309,11 +309,12 @@ if ver==2:  # Python 2
 
 else:       # Python 3+
     
-    def cmd(server,app,aline):
+    def cmd(server,app,aline, disp=True):
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
-           aline  = line to send to server \n'''
+           aline  = line to send to server \n \
+           disp = Print output \n'''
         try:
             # Web-server URL address
             url_base = server.strip() + '/online/apm_line.php'
@@ -331,7 +332,8 @@ else:       # Python 3+
                     if not char:
                         break
                     elif char == '\n':
-                        print(line)
+                        if disp:
+                            print(line)
                         line = ''
                     else:
                         line += char
