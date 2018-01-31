@@ -20,7 +20,7 @@ else:       # Python 3+
 
 if ver==2:  # Python 2
 
-    def cmd(server, app, aline):
+    def cmd(server, app, aline, disp=True):
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
@@ -40,7 +40,8 @@ if ver==2:  # Python 2
                     if not char:
                         break
                     elif char == '\n':
-                        print(line)
+                        if disp: 
+                            print(line)
                         line = ''
                     else:
                         line += char
