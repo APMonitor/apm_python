@@ -24,7 +24,8 @@ if ver==2:  # Python 2
         '''Send a request to the server \n \
            server = address of server \n \
            app      = application name \n \
-           aline  = line to send to server \n'''
+           aline  = line to send to server \n \
+           disp = Print output \n'''
         try:
             # Web-server URL address
             url_base = string.strip(server) + '/online/apm_line.php'
