@@ -1,6 +1,3 @@
-import sys
-sys.path.append("../")
-
 # Import APM package
 from apm import *
 
